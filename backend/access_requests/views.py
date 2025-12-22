@@ -9,8 +9,12 @@ from .serializers import AccessRequestSerializer
 
 
 class AccessRequestListCreateView(generics.ListCreateAPIView):
+   
     serializer_class = AccessRequestSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    def get_view_name(self):
+        return "Access Requests"
 
     def get_queryset(self):
         user = self.request.user

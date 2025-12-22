@@ -121,3 +121,8 @@ LOGOUT_REDIRECT_URL = "/api-auth/login/"
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+ADMIN_SITE_HEADER = "AccessFlow Administration"
+ADMIN_SITE_TITLE = "AccessFlow Admin"
+ADMIN_INDEX_TITLE = "System Management"
+
