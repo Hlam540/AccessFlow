@@ -7,3 +7,5 @@ admin.site.site_title = "AccessFlow Admin"
 admin.site.index_title = "System Management"
 
 admin.site.register(AccessRequest)
+
+
