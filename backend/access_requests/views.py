@@ -9,9 +9,11 @@ from .serializers import AccessRequestSerializer
 
 
 class AccessRequestListCreateView(generics.ListCreateAPIView):
-   
     serializer_class = AccessRequestSerializer
-    permission_classes = [permissions.IsAuthenticated]
+
+    # TEMPORARY so the React app can submit requests without auth
+    # (we will switch this back to IsAuthenticated once login is added)
+    permission_classes = [permissions.AllowAny]
 
     def get_view_name(self):
         return "Access Requests"
@@ -20,17 +22,25 @@ class AccessRequestListCreateView(generics.ListCreateAPIView):
         user = self.request.user
         qs = AccessRequest.objects.all().order_by("-created_at")
 
-        if user.is_staff:   # manager / admin
+        # Managers / staff see all requests
+        if user.is_staff:
             return qs
 
+        # Regular users only see their own
         return qs.filter(requester=user)
 
     def perform_create(self, serializer):
-        serializer.save(requester=self.request.user)
+        # If the user is logged in, attach requester
+        if self.request.user.is_authenticated:
+            serializer.save(requester=self.request.user)
+        else:
+            # For now, allow unauthenticated (temporary)
+            serializer.save(requester=None)
 
 
 class ApproveAccessRequestView(APIView):
-    permission_classes = [permissions.IsAdminUser]  # staff only
+    # Must remain STAFF ONLY
+    permission_classes = [permissions.IsAdminUser]
 
     def patch(self, request, pk):
         ar = get_object_or_404(AccessRequest, pk=pk)
@@ -55,7 +65,8 @@ class ApproveAccessRequestView(APIView):
 
 
 class DenyAccessRequestView(APIView):
-    permission_classes = [permissions.IsAdminUser]  # staff only
+    # Must remain STAFF ONLY
+    permission_classes = [permissions.IsAdminUser]
 
     def patch(self, request, pk):
         ar = get_object_or_404(AccessRequest, pk=pk)
