@@ -1,20 +1,28 @@
-﻿# AccessFlow
+# AccessFlow
 
-AccessFlow is an internal system for managing access requests and approvals within an organization.
+AccessFlow is a web application for managing access requests and approvals inside an organization.
 
-It provides a structured way for employees to request access to resources such as repositories, databases, or administrative tools, and for managers or administrators to review and approve those requests.
+Employees submit requests for access to resources (repos, databases, admin tools), and managers review, approve, or deny them. The system centralizes approvals so access decisions are documented, time-bound, and auditable.
 
-## Purpose
-Access requests are often handled informally through chat or email, which makes it difficult to track approvals, enforce policies, and remove access when it is no longer needed.
+## Status
 
-AccessFlow centralizes this process so that access decisions are consistent, time-bound, and auditable.
+Backend — Django + DRF (Completed)
+- Create + list access requests
+- Request status (pending / approved / denied)
+- Requester + approver relationships
+- Timestamps + audit fields
 
-## How it works
-- Employees submit access requests with a reason and requested duration
-- Requests are routed to the appropriate approver
-- Approved access is granted for a limited time and automatically expires
-- All actions are recorded for accountability and auditing
+Frontend — In Progress
+- Submit new access requests
+- View “My Requests”
+- Manager approval dashboard
 
-This is an web application in the works.
+## Workflow
 
+1) User submits access request (resource, reason, duration)
+2) Request is routed to appropriate approver
+3) Approver approves / denies
+4) Approved access is temporary (expiration planned)
+5) All actions are recorded for auditing
 
+AccessFlow is an active work-in-progress application.
