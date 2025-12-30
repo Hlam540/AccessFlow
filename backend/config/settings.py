@@ -29,7 +29,6 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -39,18 +38,18 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'access_requests',
     "rest_framework",
-
-
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",        
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -126,3 +125,7 @@ ADMIN_SITE_HEADER = "AccessFlow Administration"
 ADMIN_SITE_TITLE = "AccessFlow Admin"
 ADMIN_INDEX_TITLE = "System Management"
 
+CORS_ALLOWED_ORIGINS = [# Cross-Origin Resource Sharing
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
