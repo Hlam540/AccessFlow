@@ -1,13 +1,36 @@
 import "./App.css";
+import { useEffect, useState } from "react";
 import Navbar from "./components/Navbar";
 import UserRequestsPage from "./pages/UserRequestsPage";
 import ManagerDashboardPage from "./pages/ManagerDashboardPage";
 import SubmitRequest from "./pages/SubmitRequest";
 
 function App() {
+  const [user, setUser] = useState({ is_staff: false });
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadUser() {
+      try {
+        const res = await fetch("http://localhost:8000/api/me/");
+        if (!res.ok) return;
+        const data = await res.json();
+        if (isMounted) setUser(data);
+      } catch (err) {
+        console.error("Failed to load user", err);
+      }
+    }
+
+    loadUser();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   return (
     <div className="app">
-      <Navbar />
+      <Navbar showManager={user.is_staff} />
 
       <header className="hero">
         <div className="hero-copy">
@@ -48,9 +71,11 @@ function App() {
           <UserRequestsPage />
         </section>
 
-        <section id="manager" className="card">
-          <ManagerDashboardPage />
-        </section>
+        {user.is_staff && (
+          <section id="manager" className="card">
+            <ManagerDashboardPage />
+          </section>
+        )}
       </main>
     </div>
   );

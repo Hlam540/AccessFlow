@@ -4,7 +4,7 @@ export default function SubmitRequest() {
   const [form, setForm] = useState({
     resource_name: "",
     reason: "",
-    duration_days: ""
+    requested_days: ""
   });
 
   const [status, setStatus] = useState(null);
@@ -27,7 +27,7 @@ export default function SubmitRequest() {
       if (!res.ok) throw new Error("Request failed");
 
       setStatus("success");
-      setForm({ resource_name: "", reason: "", duration_days: "" });
+      setForm({ resource_name: "", reason: "", requested_days: "" });
     } catch (err) {
       console.error(err);
       setStatus("error");
@@ -62,9 +62,9 @@ export default function SubmitRequest() {
         <label>
           Duration (days)
           <input
-            name="duration_days"
+            name="requested_days"
             type="number"
-            value={form.duration_days}
+            value={form.requested_days}
             onChange={handleChange}
             placeholder="7"
             required

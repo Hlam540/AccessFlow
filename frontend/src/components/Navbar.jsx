@@ -1,4 +1,4 @@
-export default function Navbar() {
+export default function Navbar({ showManager }) {
   return (
     <nav className="navbar">
       <div className="brand">
@@ -12,7 +12,7 @@ export default function Navbar() {
       <div className="nav-links">
         <a href="#request">Request</a>
         <a href="#my-requests">My Requests</a>
-        <a href="#manager">Manager</a>
+        {showManager && <a href="#manager">Manager</a>}
       </div>
     </nav>
   );
