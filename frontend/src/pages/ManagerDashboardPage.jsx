@@ -3,10 +3,15 @@ import { useState, useEffect } from "react";
 export default function ManagerDashboardPage() {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [statusFilter, setStatusFilter] = useState("PENDING");
+  const [query, setQuery] = useState("");
+  const [decisionNotes, setDecisionNotes] = useState({});
 
   async function loadRequests() {
     try {
-      const res = await fetch("http://localhost:8000/api/access-requests/");
+      const res = await fetch("http://localhost:8000/api/access-requests/", {
+        credentials: "include"
+      });
       const data = await res.json();
       setRequests(data);
     } catch (err) {
@@ -22,10 +27,15 @@ export default function ManagerDashboardPage() {
 
   async function approveRequest(id) {
     try {
+      const decision_note = decisionNotes[id]?.trim();
       await fetch(`http://localhost:8000/api/access-requests/${id}/approve/`, {
-        method: "PATCH"
+        method: "PATCH",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ decision_note })
       });
       loadRequests();
+      setDecisionNotes(current => ({ ...current, [id]: "" }));
     } catch (err) {
       console.error("Approve failed", err);
     }
@@ -33,16 +43,30 @@ export default function ManagerDashboardPage() {
 
   async function denyRequest(id) {
     try {
+      const decision_note = decisionNotes[id]?.trim();
       await fetch(`http://localhost:8000/api/access-requests/${id}/deny/`, {
-        method: "PATCH"
+        method: "PATCH",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ decision_note })
       });
       loadRequests();
+      setDecisionNotes(current => ({ ...current, [id]: "" }));
     } catch (err) {
       console.error("Deny failed", err);
     }
   }
 
-  const pendingRequests = requests.filter(req => req.status === "PENDING");
+  const normalizedQuery = query.trim().toLowerCase();
+  const filteredRequests = requests.filter(req => {
+    const matchesStatus =
+      statusFilter === "ALL" || req.status === statusFilter;
+    if (!matchesStatus) return false;
+    if (!normalizedQuery) return true;
+
+    const haystack = `${req.resource_name} ${req.reason}`.toLowerCase();
+    return haystack.includes(normalizedQuery);
+  });
 
   return (
     <div>
@@ -51,14 +75,35 @@ export default function ManagerDashboardPage() {
         <p>Review pending requests and record decisions.</p>
       </div>
 
+      <div className="toolbar">
+        <input
+          className="search-input"
+          type="search"
+          placeholder="Search by resource or reason"
+          value={query}
+          onChange={event => setQuery(event.target.value)}
+        />
+        <select
+          className="select-input"
+          value={statusFilter}
+          onChange={event => setStatusFilter(event.target.value)}
+        >
+          <option value="ALL">All statuses</option>
+          <option value="PENDING">Pending</option>
+          <option value="APPROVED">Approved</option>
+          <option value="DENIED">Denied</option>
+          <option value="EXPIRED">Expired</option>
+        </select>
+      </div>
+
       {loading && <p className="empty-state">Loading...</p>}
 
-      {!loading && pendingRequests.length === 0 && (
+      {!loading && filteredRequests.length === 0 && (
         <p className="empty-state">No pending requests.</p>
       )}
 
       <div className="request-list">
-        {pendingRequests.map(req => (
+        {filteredRequests.map(req => (
           <div key={req.id} className="request-item">
             <div className="request-meta">
               <strong>{req.resource_name}</strong>
@@ -73,21 +118,35 @@ export default function ManagerDashboardPage() {
             </div>
             <small>{req.reason}</small>
 
-            <div className="manager-actions">
-              <button
-                className="btn"
-                onClick={() => approveRequest(req.id)}
-              >
-                Approve
-              </button>
+            {req.status === "PENDING" && (
+              <div className="manager-actions">
+                <input
+                  className="decision-input"
+                  type="text"
+                  placeholder="Decision note (optional)"
+                  value={decisionNotes[req.id] ?? ""}
+                  onChange={event =>
+                    setDecisionNotes(current => ({
+                      ...current,
+                      [req.id]: event.target.value
+                    }))
+                  }
+                />
+                <button
+                  className="btn"
+                  onClick={() => approveRequest(req.id)}
+                >
+                  Approve
+                </button>
 
-              <button
-                className="btn btn-danger"
-                onClick={() => denyRequest(req.id)}
-              >
-                Deny
-              </button>
-            </div>
+                <button
+                  className="btn btn-danger"
+                  onClick={() => denyRequest(req.id)}
+                >
+                  Deny
+                </button>
+              </div>
+            )}
           </div>
         ))}
       </div>

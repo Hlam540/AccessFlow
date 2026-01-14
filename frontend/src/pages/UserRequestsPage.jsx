@@ -6,7 +6,9 @@ export default function UserRequestsPage() {
 
   async function loadRequests() {
     try {
-      const res = await fetch("http://localhost:8000/api/access-requests/");
+      const res = await fetch("http://localhost:8000/api/access-requests/", {
+        credentials: "include"
+      });
       const data = await res.json();
       setRequests(data);
     } catch (err) {

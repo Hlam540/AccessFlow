@@ -168,6 +168,28 @@
   color: var(--muted);
 }
 
+.toolbar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.search-input,
+.select-input {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  font-size: 0.95rem;
+  min-width: 200px;
+}
+
+.search-input {
+  flex: 1;
+}
+
 .request-form {
   display: flex;
   flex-direction: column;
@@ -314,10 +336,23 @@
   display: flex;
   gap: 10px;
   margin-top: 6px;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .manager-actions .btn {
   flex: 1;
+  min-width: 110px;
+}
+
+.decision-input {
+  flex: 2;
+  min-width: 180px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-size: 0.9rem;
 }
 
 .empty-state {

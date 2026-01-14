@@ -10,17 +10,26 @@ class AccessRequest(models.Model):
         EXPIRED = "EXPIRED", "Expired"
 
     requester = models.ForeignKey(
-    settings.AUTH_USER_MODEL,
-    on_delete=models.CASCADE,
-    related_name="access_requests",
-    null=True,
-    blank=True,
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="access_requests",
+        null=True,
+        blank=True,
+    )
+
+    approved_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        related_name="approved_requests",
+        null=True,
+        blank=True,
     )
 
 
     resource_name = models.CharField(max_length=100)
     reason = models.TextField()
     requested_days = models.PositiveIntegerField(default=7)
+    decision_note = models.TextField(blank=True, default="")
 
     status = models.CharField(
         max_length=20,

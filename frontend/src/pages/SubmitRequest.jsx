@@ -21,6 +21,7 @@ export default function SubmitRequest() {
       const res = await fetch("http://localhost:8000/api/access-requests/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(form)
       });
 

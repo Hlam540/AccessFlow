@@ -13,7 +13,9 @@ function App() {
 
     async function loadUser() {
       try {
-        const res = await fetch("http://localhost:8000/api/me/");
+        const res = await fetch("http://localhost:8000/api/me/", {
+          credentials: "include"
+        });
         if (!res.ok) return;
         const data = await res.json();
         if (isMounted) setUser(data);

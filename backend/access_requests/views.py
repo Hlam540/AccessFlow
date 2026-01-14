@@ -26,7 +26,10 @@ class AccessRequestListCreateView(generics.ListCreateAPIView):
         if user.is_staff:
             return qs
 
-        # Regular users only see their own
+        # Regular users only see their own; anonymous users see only anonymous requests
+        if not user.is_authenticated:
+            return qs.filter(requester__isnull=True)
+
         return qs.filter(requester=user)
 
     def perform_create(self, serializer):
@@ -57,8 +60,12 @@ class ApproveAccessRequestView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
+        note = request.data.get("decision_note")
         ar.status = AccessRequest.Status.APPROVED
+        ar.approved_by = request.user
         ar.decided_at = timezone.now()
+        if note is not None:
+            ar.decision_note = note
         ar.save()
 
         return Response(AccessRequestSerializer(ar).data, status=status.HTTP_200_OK)
@@ -83,8 +90,26 @@ class DenyAccessRequestView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
+        note = request.data.get("decision_note")
         ar.status = AccessRequest.Status.DENIED
+        ar.approved_by = request.user
         ar.decided_at = timezone.now()
+        if note is not None:
+            ar.decision_note = note
         ar.save()
 
         return Response(AccessRequestSerializer(ar).data, status=status.HTTP_200_OK)
+
+
+class CurrentUserView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request):
+        user = request.user
+        return Response(
+            {
+                "is_authenticated": user.is_authenticated,
+                "is_staff": user.is_staff if user.is_authenticated else False,
+                "username": user.get_username() if user.is_authenticated else None,
+            }
+        )
