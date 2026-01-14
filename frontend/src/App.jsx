@@ -1,3 +1,4 @@
+import "./App.css";
 import Navbar from "./components/Navbar";
 import UserRequestsPage from "./pages/UserRequestsPage";
 import ManagerDashboardPage from "./pages/ManagerDashboardPage";
@@ -5,22 +6,52 @@ import SubmitRequest from "./pages/SubmitRequest";
 
 function App() {
   return (
-    <div style={{ fontFamily: "system-ui, sans-serif", padding: "2rem" }}>
+    <div className="app">
       <Navbar />
 
-      <section id="user" style={{ marginBottom: "2rem" }}>
-        <h2>Employee — Submit Access Request</h2>
+      <header className="hero">
+        <div className="hero-copy">
+          <p className="eyebrow">Access management for student clubs</p>
+          <h1>Request access without chasing DMs.</h1>
+          <p className="hero-text">
+            AccessFlow centralizes requests for club tools, roles, and equipment
+            so decisions are fast and auditable.
+          </p>
+          <div className="hero-tags">
+            <span className="tag">Drive folders</span>
+            <span className="tag">Discord roles</span>
+            <span className="tag">Equipment</span>
+            <span className="tag">Event tools</span>
+          </div>
+        </div>
 
-        <SubmitRequest />
+        <div className="hero-panel">
+          <h3>How it works</h3>
+          <ol className="hero-steps">
+            <li>Members submit a request with a reason and duration.</li>
+            <li>Managers review pending requests in one queue.</li>
+            <li>Every decision is saved for the record.</li>
+          </ol>
+        </div>
+      </header>
 
-        <hr style={{ margin: "2rem 0" }} />
+      <main className="content-grid">
+        <section id="request" className="card">
+          <div className="card-header">
+            <h2>Request access</h2>
+            <p>Ask for access to club resources like tools, roles, or equipment.</p>
+          </div>
+          <SubmitRequest />
+        </section>
 
-        <UserRequestsPage />
-      </section>
+        <section id="my-requests" className="card">
+          <UserRequestsPage />
+        </section>
 
-      <section id="manager">
-        <ManagerDashboardPage />
-      </section>
+        <section id="manager" className="card">
+          <ManagerDashboardPage />
+        </section>
+      </main>
     </div>
   );
 }

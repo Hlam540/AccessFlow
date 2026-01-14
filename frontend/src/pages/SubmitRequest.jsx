@@ -28,7 +28,6 @@ export default function SubmitRequest() {
 
       setStatus("success");
       setForm({ resource_name: "", reason: "", duration_days: "" });
-
     } catch (err) {
       console.error(err);
       setStatus("error");
@@ -36,27 +35,26 @@ export default function SubmitRequest() {
   }
 
   return (
-    <div style={{ maxWidth: 600, margin: "40px auto" }}>
-      <h2>Submit Access Request</h2>
-
-      <form onSubmit={handleSubmit}>
-
+    <div>
+      <form className="request-form" onSubmit={handleSubmit}>
         <label>
-          Resource Name
+          Resource
           <input
             name="resource_name"
             value={form.resource_name}
             onChange={handleChange}
+            placeholder="Discord officer role, camera kit, Drive folder"
             required
           />
         </label>
 
         <label>
-          Reason for Access
+          Reason for access
           <textarea
             name="reason"
             value={form.reason}
             onChange={handleChange}
+            placeholder="Briefly explain why you need access."
             required
           />
         </label>
@@ -68,18 +66,27 @@ export default function SubmitRequest() {
             type="number"
             value={form.duration_days}
             onChange={handleChange}
+            placeholder="7"
             required
           />
         </label>
 
-        <button type="submit">
-          Submit Request
-        </button>
+        <div className="form-actions">
+          <button className="btn" type="submit" disabled={status === "loading"}>
+            Submit request
+          </button>
+        </div>
       </form>
 
-      {status === "loading" && <p>Submitting…</p>}
-      {status === "success" && <p style={{ color: "green" }}>Request submitted!</p>}
-      {status === "error" && <p style={{ color: "red" }}>Something went wrong.</p>}
+      {status === "loading" && (
+        <p className="status-message loading">Submitting request...</p>
+      )}
+      {status === "success" && (
+        <p className="status-message success">Request submitted!</p>
+      )}
+      {status === "error" && (
+        <p className="status-message error">Something went wrong.</p>
+      )}
     </div>
   );
 }

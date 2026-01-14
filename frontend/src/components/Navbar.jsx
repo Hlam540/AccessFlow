@@ -1,9 +1,19 @@
 export default function Navbar() {
   return (
-    <nav style={{ marginBottom: "1.5rem" }}>
-      <strong>AccessFlow</strong> &nbsp; | &nbsp;
-      <a href="#user">User</a> &nbsp; | &nbsp;
-      <a href="#manager">Manager</a>
+    <nav className="navbar">
+      <div className="brand">
+        <span className="brand-mark">AF</span>
+        <div>
+          <div className="brand-title">AccessFlow</div>
+          <div className="brand-sub">Access management for student clubs</div>
+        </div>
+      </div>
+
+      <div className="nav-links">
+        <a href="#request">Request</a>
+        <a href="#my-requests">My Requests</a>
+        <a href="#manager">Manager</a>
+      </div>
     </nav>
   );
 }

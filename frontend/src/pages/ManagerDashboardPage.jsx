@@ -25,7 +25,7 @@ export default function ManagerDashboardPage() {
       await fetch(`http://localhost:8000/api/access-requests/${id}/approve/`, {
         method: "PATCH"
       });
-      loadRequests(); // refresh list
+      loadRequests();
     } catch (err) {
       console.error("Approve failed", err);
     }
@@ -36,45 +36,61 @@ export default function ManagerDashboardPage() {
       await fetch(`http://localhost:8000/api/access-requests/${id}/deny/`, {
         method: "PATCH"
       });
-      loadRequests(); // refresh list
+      loadRequests();
     } catch (err) {
       console.error("Deny failed", err);
     }
   }
 
+  const pendingRequests = requests.filter(req => req.status === "PENDING");
+
   return (
     <div>
-      <h2>Manager: Access Requests Dashboard</h2>
+      <div className="card-header">
+        <h2>Manager dashboard</h2>
+        <p>Review pending requests and record decisions.</p>
+      </div>
 
-      {loading && <p>Loading...</p>}
+      {loading && <p className="empty-state">Loading...</p>}
 
-      {!loading &&
-        requests
-          .filter(req => req.status === "PENDING")
-          .map(req => (
-            <div key={req.id} style={{ marginBottom: "1rem" }}>
-              <strong>{req.resource_name}</strong> — {req.status}
-              <br />
-              <small>{req.reason}</small>
-              <br />
+      {!loading && pendingRequests.length === 0 && (
+        <p className="empty-state">No pending requests.</p>
+      )}
 
-              <button onClick={() => approveRequest(req.id)}>
+      <div className="request-list">
+        {pendingRequests.map(req => (
+          <div key={req.id} className="request-item">
+            <div className="request-meta">
+              <strong>{req.resource_name}</strong>
+              <span
+                className={`status-pill status-${req.status.toLowerCase()}`}
+              >
+                {req.status}
+              </span>
+              {req.requested_days && (
+                <span className="meta-chip">{req.requested_days} days</span>
+              )}
+            </div>
+            <small>{req.reason}</small>
+
+            <div className="manager-actions">
+              <button
+                className="btn"
+                onClick={() => approveRequest(req.id)}
+              >
                 Approve
               </button>
 
               <button
+                className="btn btn-danger"
                 onClick={() => denyRequest(req.id)}
-                style={{ marginLeft: "8px" }}
               >
                 Deny
               </button>
             </div>
-          ))}
-
-      {!loading &&
-        requests.filter(r => r.status === "PENDING").length === 0 && (
-          <p>No pending requests.</p>
-        )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

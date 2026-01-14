@@ -22,19 +22,31 @@ export default function UserRequestsPage() {
 
   return (
     <div>
-      <h3>My Requests</h3>
+      <div className="card-header">
+        <h2>My requests</h2>
+        <p>Track the status of your access requests.</p>
+      </div>
 
-      {loading && <p>Loading...</p>}
+      {loading && <p className="empty-state">Loading...</p>}
 
       {!loading && requests.length === 0 && (
-        <p>No requests yet.</p>
+        <p className="empty-state">No requests yet.</p>
       )}
 
-      <ul>
+      <ul className="request-list">
         {requests.map(req => (
-          <li key={req.id}>
-            <strong>{req.resource_name}</strong> — {req.status}
-            <br />
+          <li key={req.id} className="request-item">
+            <div className="request-meta">
+              <strong>{req.resource_name}</strong>
+              <span
+                className={`status-pill status-${req.status.toLowerCase()}`}
+              >
+                {req.status}
+              </span>
+              {req.requested_days && (
+                <span className="meta-chip">{req.requested_days} days</span>
+              )}
+            </div>
             <small>{req.reason}</small>
           </li>
         ))}
