@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-export default function UserRequestsPage() {
+export default function UserRequestsPage({ refreshToken }) {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -20,7 +20,7 @@ export default function UserRequestsPage() {
 
   useEffect(() => {
     loadRequests();
-  }, []);
+  }, [refreshToken]);
 
   return (
     <div>

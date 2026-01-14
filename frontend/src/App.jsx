@@ -7,6 +7,7 @@ import SubmitRequest from "./pages/SubmitRequest";
 
 function App() {
   const [user, setUser] = useState({ is_staff: false });
+  const [refreshToken, setRefreshToken] = useState(0);
 
   useEffect(() => {
     let isMounted = true;
@@ -70,12 +71,14 @@ function App() {
         </section>
 
         <section id="my-requests" className="card">
-          <UserRequestsPage />
+          <UserRequestsPage refreshToken={refreshToken} />
         </section>
 
         {user.is_staff && (
           <section id="manager" className="card">
-            <ManagerDashboardPage />
+            <ManagerDashboardPage
+              onDecision={() => setRefreshToken(token => token + 1)}
+            />
           </section>
         )}
       </main>

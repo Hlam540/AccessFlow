@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-export default function ManagerDashboardPage() {
+export default function ManagerDashboardPage({ onDecision }) {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState("PENDING");
@@ -36,6 +36,7 @@ export default function ManagerDashboardPage() {
       });
       loadRequests();
       setDecisionNotes(current => ({ ...current, [id]: "" }));
+      if (onDecision) onDecision();
     } catch (err) {
       console.error("Approve failed", err);
     }
@@ -52,6 +53,7 @@ export default function ManagerDashboardPage() {
       });
       loadRequests();
       setDecisionNotes(current => ({ ...current, [id]: "" }));
+      if (onDecision) onDecision();
     } catch (err) {
       console.error("Deny failed", err);
     }
