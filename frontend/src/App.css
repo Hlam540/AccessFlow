@@ -360,6 +360,17 @@
   margin: 0;
 }
 
+.signed-in {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+}
+
 @media (max-width: 900px) {
   .hero {
     grid-template-columns: 1fr;

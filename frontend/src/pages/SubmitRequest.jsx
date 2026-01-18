@@ -1,10 +1,10 @@
 import { useState } from "react";
 
-export default function SubmitRequest() {
+export default function SubmitRequest({ onSubmitted }) {
   const [form, setForm] = useState({
     resource_name: "",
     reason: "",
-    requested_days: ""
+    requested_days: 7
   });
 
   const [status, setStatus] = useState(null);
@@ -18,17 +18,23 @@ export default function SubmitRequest() {
     setStatus("loading");
 
     try {
+      const payload = {
+        ...form,
+        requested_days: Number(form.requested_days)
+      };
+
       const res = await fetch("http://localhost:8000/api/access-requests/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify(form)
+        body: JSON.stringify(payload)
       });
 
       if (!res.ok) throw new Error("Request failed");
 
       setStatus("success");
-      setForm({ resource_name: "", reason: "", requested_days: "" });
+      setForm({ resource_name: "", reason: "", requested_days: 7 });
+      if (onSubmitted) onSubmitted();
     } catch (err) {
       console.error(err);
       setStatus("error");

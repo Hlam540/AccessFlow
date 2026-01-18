@@ -1,12 +1,17 @@
 import "./App.css";
 import { useEffect, useState } from "react";
 import Navbar from "./components/Navbar";
+import AuthPanel from "./components/AuthPanel";
 import UserRequestsPage from "./pages/UserRequestsPage";
 import ManagerDashboardPage from "./pages/ManagerDashboardPage";
 import SubmitRequest from "./pages/SubmitRequest";
 
 function App() {
-  const [user, setUser] = useState({ is_staff: false });
+  const [user, setUser] = useState({
+    is_authenticated: false,
+    is_staff: false,
+    username: null
+  });
   const [refreshToken, setRefreshToken] = useState(0);
 
   useEffect(() => {
@@ -30,6 +35,10 @@ function App() {
       isMounted = false;
     };
   }, []);
+
+  function handleAuthUpdate(nextUser) {
+    setUser(nextUser);
+  }
 
   return (
     <div className="app">
@@ -62,12 +71,16 @@ function App() {
       </header>
 
       <main className="content-grid">
+        <section id="auth" className="card">
+          <AuthPanel user={user} onAuthUpdate={handleAuthUpdate} />
+        </section>
+
         <section id="request" className="card">
           <div className="card-header">
             <h2>Request access</h2>
             <p>Ask for access to club resources like tools, roles, or equipment.</p>
           </div>
-          <SubmitRequest />
+          <SubmitRequest onSubmitted={() => setRefreshToken(token => token + 1)} />
         </section>
 
         <section id="my-requests" className="card">

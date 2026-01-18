@@ -10,6 +10,7 @@ export default function Navbar({ showManager }) {
       </div>
 
       <div className="nav-links">
+        <a href="#auth">Sign in</a>
         <a href="#request">Request</a>
         <a href="#my-requests">My Requests</a>
         {showManager && <a href="#manager">Manager</a>}
